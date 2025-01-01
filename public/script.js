@@ -1,4 +1,5 @@
 const notificationSound = new Audio('notification.mp3'); // تحميل ملف الصوت
+const callLog = []; // مصفوفة لتسجيل المكالمات
 
 const showNotification = (message) => {
   const notification = document.createElement('div');
@@ -16,14 +17,13 @@ const showNotification = (message) => {
   }, 5000);
 };
 
-
 const socket = io('https://call-app-n3pl.onrender.com'); // رابط الخادم الخاص بك
 
 document.getElementById('registerBtn').addEventListener('click', () => {
   const userId = document.getElementById('userId').value;
   if (userId) {
     socket.emit('register', { userId });
-   showNotification('Registered successfully!');
+    showNotification('Registered successfully!');
   } else {
     showNotification('Please enter your ID.');
   }
@@ -31,9 +31,10 @@ document.getElementById('registerBtn').addEventListener('click', () => {
 
 document.getElementById('callBtn').addEventListener('click', () => {
   const userId = document.getElementById('userId').value;
-  const calleeId = document.getElementById('calleeId').value;
+  const calleeId = document.getElementById('calleeId').value; // إذا غيرت الاسم إلى callId، استخدم callId هنا
   if (userId && calleeId) {
     socket.emit('call', { callerId: userId, calleeId });
+    callLog.push({ type: 'Outgoing', to: calleeId, time: new Date().toLocaleString() });
     showNotification(`Calling ${calleeId}...`);
   } else {
     showNotification('Please fill in both IDs.');
@@ -41,8 +42,11 @@ document.getElementById('callBtn').addEventListener('click', () => {
 });
 
 socket.on('incoming_call', ({ callerId }) => {
+  notificationSound.play(); // تشغيل الصوت
+  callLog.push({ type: 'Incoming', from: callerId, time: new Date().toLocaleString() });
   showNotification(`Incoming call from: ${callerId}`);
 });
+
 document.getElementById('showLogBtn').addEventListener('click', () => {
   const logContainer = document.getElementById('callLog');
   logContainer.innerHTML = ''; // تفريغ السجل القديم
