@@ -1,43 +1,72 @@
+/* تنسيق عام للصفحة */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
+  background-color: #f8f9fa;
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  flex-direction: column;
 }
 
+/* تنسيق العنوان الرئيسي */
 h1 {
-  color: #333;
+  color: #007bff;
+  margin-bottom: 20px;
 }
 
+/* تنسيق العناصر الداخلية */
 div {
-  margin: 20px;
+  margin: 10px 0;
 }
 
+/* تنسيق حقول الإدخال */
 input {
   padding: 10px;
   margin-right: 5px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
+/* تنسيق الأزرار */
 button {
   padding: 10px 15px;
   background-color: #007bff;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
 button:hover {
   background-color: #0056b3;
 }
-/* إشعارات التطبيق */
-div.notification {
+
+/* تنسيق قائمة سجل المكالمات */
+#callLog {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#callLog li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+#callLog li:last-child {
+  border-bottom: none;
+}
+
+/* تنسيق الإشعارات */
+.notification {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -50,6 +79,7 @@ div.notification {
   animation: slide-in 0.5s ease;
 }
 
+/* تأثير انزلاق الإشعارات */
 @keyframes slide-in {
   from {
     opacity: 0;
