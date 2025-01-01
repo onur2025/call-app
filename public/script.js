@@ -2,6 +2,7 @@ const notificationSound = new Audio('notification.mp3'); // تحميل ملف ا
 const callLog = []; // مصفوفة لتسجيل المكالمات
 let callTimeout; // لتخزين المؤقت لفصل الاتصال تلقائيًا
 
+// دالة لإظهار الإشعارات
 const showNotification = (message) => {
   const notification = document.createElement('div');
   notification.textContent = message;
@@ -13,8 +14,10 @@ const showNotification = (message) => {
   }, 5000);
 };
 
+// الاتصال بـ Socket.IO
 const socket = io('https://call-app-n3pl.onrender.com'); // رابط الخادم الخاص بك
 
+// تسجيل المستخدم
 document.getElementById('registerBtn').addEventListener('click', () => {
   const userId = document.getElementById('userId').value;
   if (userId) {
@@ -25,6 +28,7 @@ document.getElementById('registerBtn').addEventListener('click', () => {
   }
 });
 
+// بدء مكالمة
 document.getElementById('callBtn').addEventListener('click', () => {
   const userId = document.getElementById('userId').value;
   const callId = document.getElementById('callId').value; // استخدام callId بدلًا من calleeId
@@ -37,6 +41,7 @@ document.getElementById('callBtn').addEventListener('click', () => {
   }
 });
 
+// استقبال مكالمة واردة
 socket.on('incoming_call', ({ callerId, calleeId }) => {
   const userId = document.getElementById('userId').value;
 
@@ -58,6 +63,7 @@ socket.on('incoming_call', ({ callerId, calleeId }) => {
   }
 });
 
+// قبول المكالمة
 document.getElementById('acceptCallBtn').addEventListener('click', () => {
   const callActions = document.getElementById('callActions');
   const callerId = callActions.getAttribute('data-caller-id');
@@ -70,6 +76,7 @@ document.getElementById('acceptCallBtn').addEventListener('click', () => {
   window.location.href = 'call.html';
 });
 
+// رفض المكالمة
 document.getElementById('rejectCallBtn').addEventListener('click', () => {
   const callActions = document.getElementById('callActions');
   const callerId = callActions.getAttribute('data-caller-id');
@@ -82,10 +89,17 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
   callActions.style.display = 'none';
 });
 
+// استقبال حدث إعادة التوجيه إلى صفحة الاتصال
 socket.on('redirect_to_call', () => {
   window.location.href = 'call.html';
 });
 
+// استقبال رفض المكالمة
+socket.on('call_rejected', () => {
+  showNotification('The call was rejected.');
+});
+
+// عرض سجل المكالمات
 document.getElementById('showLogBtn').addEventListener('click', () => {
   const logContainer = document.getElementById('callLog');
   logContainer.innerHTML = ''; // تفريغ السجل القديم
@@ -95,5 +109,3 @@ document.getElementById('showLogBtn').addEventListener('click', () => {
     logContainer.appendChild(logItem);
   });
 });
-
-
