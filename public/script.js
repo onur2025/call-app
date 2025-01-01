@@ -1,3 +1,4 @@
+
 const notificationSound = new Audio('notification.mp3'); // تحميل ملف الصوت
 const callLog = []; // مصفوفة لتسجيل المكالمات
 
@@ -31,11 +32,11 @@ document.getElementById('registerBtn').addEventListener('click', () => {
 
 document.getElementById('callBtn').addEventListener('click', () => {
   const userId = document.getElementById('userId').value;
-  const calleeId = document.getElementById('calleeId').value; // إذا غيرت الاسم إلى callId، استخدم callId هنا
-  if (userId && calleeId) {
-    socket.emit('call', { callerId: userId, calleeId });
-    callLog.push({ type: 'Outgoing', to: calleeId, time: new Date().toLocaleString() });
-    showNotification(`Calling ${calleeId}...`);
+  const callId = document.getElementById('callId').value; // استخدام callId بدلًا من calleeId
+  if (userId && callId) {
+    socket.emit('call', { callerId: userId, calleeId: callId }); // تمرير callId كـ calleeId للخادم
+    callLog.push({ type: 'Outgoing', to: callId, time: new Date().toLocaleString() }); // تسجيل المكالمة الصادرة
+    showNotification(`Calling ${callId}...`);
   } else {
     showNotification('Please fill in both IDs.');
   }
@@ -43,7 +44,7 @@ document.getElementById('callBtn').addEventListener('click', () => {
 
 socket.on('incoming_call', ({ callerId }) => {
   notificationSound.play(); // تشغيل الصوت
-  callLog.push({ type: 'Incoming', from: callerId, time: new Date().toLocaleString() });
+  callLog.push({ type: 'Incoming', from: callerId, time: new Date().toLocaleString() }); // تسجيل المكالمة الواردة
   showNotification(`Incoming call from: ${callerId}`);
 });
 
