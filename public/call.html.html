@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>In Call</title>
+  <style>
+    body {
+      background-color: green;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 15px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    #speakerBtn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    #endCallBtn {
+      background-color: red;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>In Call</h1>
+  <button id="speakerBtn">🔊 Speaker</button>
+  <button id="endCallBtn">📞 End Call</button>
+  <script>
+    document.getElementById('endCallBtn').addEventListener('click', () => {
+      window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية عند إنهاء المكالمة
+    });
+  </script>
+</body>
+</html>
