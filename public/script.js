@@ -1,3 +1,5 @@
+const notificationSound = new Audio('notification.mp3'); // تحميل ملف الصوت
+
 const showNotification = (message) => {
   const notification = document.createElement('div');
   notification.textContent = message;
@@ -40,4 +42,13 @@ document.getElementById('callBtn').addEventListener('click', () => {
 
 socket.on('incoming_call', ({ callerId }) => {
   showNotification(`Incoming call from: ${callerId}`);
+});
+document.getElementById('showLogBtn').addEventListener('click', () => {
+  const logContainer = document.getElementById('callLog');
+  logContainer.innerHTML = ''; // تفريغ السجل القديم
+  callLog.forEach((log) => {
+    const logItem = document.createElement('li');
+    logItem.textContent = `${log.type} call ${log.type === 'Incoming' ? 'from' : 'to'} ${log.type === 'Incoming' ? log.from : log.to} at ${log.time}`;
+    logContainer.appendChild(logItem);
+  });
 });
