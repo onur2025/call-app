@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,8 +18,13 @@
   <br>
   <div>
     <label for="callId">Call ID:</label>
-    <input type="text" id="callId" placeholder="Enter call ID"> <!-- تعديل ID الحقل إلى callId -->
+    <input type="text" id="callId" placeholder="Enter call ID">
     <button id="callBtn">Call</button>
+  </div>
+  <br>
+  <div id="callActions" style="display: none;">
+    <button id="acceptCallBtn" style="background-color: green; color: white;">Accept</button>
+    <button id="rejectCallBtn" style="background-color: red; color: white;">Reject</button>
   </div>
   <br>
   <div>
