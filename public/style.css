@@ -65,6 +65,34 @@ button:hover {
   border-bottom: none;
 }
 
+/* تنسيق أزرار القبول والرفض */
+#callActions button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#acceptCallBtn {
+  background-color: green;
+  color: white;
+}
+
+#rejectCallBtn {
+  background-color: red;
+  color: white;
+}
+
+#acceptCallBtn:hover {
+  background-color: darkgreen;
+}
+
+#rejectCallBtn:hover {
+  background-color: darkred;
+}
+
 /* تنسيق الإشعارات */
 .notification {
   position: fixed;
