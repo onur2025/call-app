@@ -1,5 +1,6 @@
 const notificationSound = new Audio('notification.mp3'); // تحميل ملف الصوت
 const callLog = []; // مصفوفة لتسجيل المكالمات
+let callTimeout; // لتخزين المؤقت لفصل الاتصال تلقائيًا
 
 const showNotification = (message) => {
   const notification = document.createElement('div');
@@ -36,38 +37,53 @@ document.getElementById('callBtn').addEventListener('click', () => {
   }
 });
 
-socket.on('incoming_call', ({ callerId }) => {
-  notificationSound.play(); // تشغيل الصوت
-  showNotification(`Incoming call from: ${callerId}`);
-  
-  // إظهار أزرار القبول والرفض
-  const callActions = document.getElementById('callActions');
-  callActions.style.display = 'block';
+socket.on('incoming_call', ({ callerId, calleeId }) => {
+  const userId = document.getElementById('userId').value;
 
-  // تخزين معرف المتصل
-  callActions.setAttribute('data-caller-id', callerId);
+  if (userId === calleeId) {
+    notificationSound.play(); // تشغيل الصوت
+    showNotification(`Incoming call from: ${callerId}`);
+    
+    // إظهار أزرار القبول والرفض فقط للمستقبل
+    const callActions = document.getElementById('callActions');
+    callActions.style.display = 'block';
+    callActions.setAttribute('data-caller-id', callerId);
+
+    // بدء عداد زمني لفصل المكالمة تلقائيًا بعد 10 ثوانٍ
+    callTimeout = setTimeout(() => {
+      socket.emit('timeout_call', { callerId });
+      showNotification('Call timed out.');
+      callActions.style.display = 'none'; // إخفاء الأزرار
+    }, 10000); // 10 ثوانٍ
+  }
 });
 
 document.getElementById('acceptCallBtn').addEventListener('click', () => {
   const callActions = document.getElementById('callActions');
   const callerId = callActions.getAttribute('data-caller-id');
 
+  clearTimeout(callTimeout); // إلغاء المؤقت
   socket.emit('accept_call', { callerId });
   showNotification(`You accepted the call from ${callerId}.`);
 
-  // إخفاء الأزرار بعد القبول
-  callActions.style.display = 'none';
+  // الانتقال إلى صفحة الاتصال
+  window.location.href = 'call.html';
 });
 
 document.getElementById('rejectCallBtn').addEventListener('click', () => {
   const callActions = document.getElementById('callActions');
   const callerId = callActions.getAttribute('data-caller-id');
 
+  clearTimeout(callTimeout); // إلغاء المؤقت
   socket.emit('reject_call', { callerId });
   showNotification(`You rejected the call from ${callerId}.`);
 
   // إخفاء الأزرار بعد الرفض
   callActions.style.display = 'none';
+});
+
+socket.on('redirect_to_call', () => {
+  window.location.href = 'call.html';
 });
 
 document.getElementById('showLogBtn').addEventListener('click', () => {
@@ -79,4 +95,5 @@ document.getElementById('showLogBtn').addEventListener('click', () => {
     logContainer.appendChild(logItem);
   });
 });
+
 
