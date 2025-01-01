@@ -1,16 +1,10 @@
-
 const notificationSound = new Audio('notification.mp3'); // تحميل ملف الصوت
 const callLog = []; // مصفوفة لتسجيل المكالمات
 
 const showNotification = (message) => {
   const notification = document.createElement('div');
   notification.textContent = message;
-  notification.style.backgroundColor = '#007bff';
-  notification.style.color = '#fff';
-  notification.style.padding = '10px';
-  notification.style.marginTop = '10px';
-  notification.style.borderRadius = '4px';
-  notification.style.textAlign = 'center';
+  notification.className = 'notification';
   document.body.appendChild(notification);
 
   setTimeout(() => {
@@ -44,8 +38,36 @@ document.getElementById('callBtn').addEventListener('click', () => {
 
 socket.on('incoming_call', ({ callerId }) => {
   notificationSound.play(); // تشغيل الصوت
-  callLog.push({ type: 'Incoming', from: callerId, time: new Date().toLocaleString() }); // تسجيل المكالمة الواردة
   showNotification(`Incoming call from: ${callerId}`);
+  
+  // إظهار أزرار القبول والرفض
+  const callActions = document.getElementById('callActions');
+  callActions.style.display = 'block';
+
+  // تخزين معرف المتصل
+  callActions.setAttribute('data-caller-id', callerId);
+});
+
+document.getElementById('acceptCallBtn').addEventListener('click', () => {
+  const callActions = document.getElementById('callActions');
+  const callerId = callActions.getAttribute('data-caller-id');
+
+  socket.emit('accept_call', { callerId });
+  showNotification(`You accepted the call from ${callerId}.`);
+
+  // إخفاء الأزرار بعد القبول
+  callActions.style.display = 'none';
+});
+
+document.getElementById('rejectCallBtn').addEventListener('click', () => {
+  const callActions = document.getElementById('callActions');
+  const callerId = callActions.getAttribute('data-caller-id');
+
+  socket.emit('reject_call', { callerId });
+  showNotification(`You rejected the call from ${callerId}.`);
+
+  // إخفاء الأزرار بعد الرفض
+  callActions.style.display = 'none';
 });
 
 document.getElementById('showLogBtn').addEventListener('click', () => {
@@ -57,3 +79,4 @@ document.getElementById('showLogBtn').addEventListener('click', () => {
     logContainer.appendChild(logItem);
   });
 });
+
