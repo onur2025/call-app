@@ -1,13 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Call App</title>
   <link rel="stylesheet" href="style.css">
-</head>
-
 </head>
 <body>
   <h1>Call App</h1>
@@ -18,10 +16,14 @@
   </div>
   <br>
   <div>
-    <label for="calleeId">Call ID:</label>
-<input type="text" id="calleeId" placeholder="Enter call ID">
-
+    <label for="callId">Call ID:</label>
+    <input type="text" id="callId" placeholder="Enter call ID"> <!-- تعديل ID الحقل إلى callId -->
     <button id="callBtn">Call</button>
+  </div>
+  <br>
+  <div>
+    <button id="showLogBtn">Show Call Log</button>
+    <ul id="callLog"></ul>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
