@@ -9,28 +9,46 @@
 <body>
   <h1>In Call</h1>
   <div class="button-container">
-    <button id="speakerBtn" style="background-color: blue; color: white;">🔊 Speaker</button>
-    <button id="endCallBtn" style="background-color: red; color: white;">📞 End Call</button>
+    <button id="speakerBtn" class="btn-speaker">🔊 Speaker</button>
+    <button id="endCallBtn" class="btn-end">📞 End Call</button>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io('http://localhost:3000');
     const otherUserId = sessionStorage.getItem('otherUserId');
 
+    // تحقق من وجود معرف الطرف الآخر
+    if (!otherUserId) {
+      alert('No call in progress.');
+      window.location.href = 'index.html';
+    }
+
     // إنهاء المكالمة
     document.getElementById('endCallBtn').addEventListener('click', () => {
       if (otherUserId) {
         socket.emit('end_call', { otherUserId });
-        alert('You ended the call.');
+        showNotification('You ended the call.');
       }
       window.location.href = 'index.html';
     });
 
     // التعامل مع حدث إنهاء المكالمة من الطرف الآخر
     socket.on('call_ended', () => {
-      alert('The call has been ended by the other party.');
+      showNotification('The call has been ended by the other party.');
       window.location.href = 'index.html';
     });
+
+    // دالة لإظهار الإشعارات داخل التطبيق
+    const showNotification = (message) => {
+      const notification = document.createElement('div');
+      notification.textContent = message;
+      notification.className = 'notification';
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
+    };
   </script>
 </body>
 </html>
