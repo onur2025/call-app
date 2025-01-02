@@ -47,8 +47,7 @@ socket.on('incoming_call', ({ callerId }) => {
 // قبول المكالمة
 document.getElementById('acceptCallBtn').addEventListener('click', () => {
   const callerId = document.getElementById('callActions').getAttribute('data-caller-id');
-  const calleeId = document.getElementById('userId').value;
-  socket.emit('accept_call', { callerId, calleeId });
+  socket.emit('accept_call', { callerId });
 });
 
 // رفض المكالمة
