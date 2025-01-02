@@ -10,30 +10,34 @@ h1 {
   color: #333;
 }
 
+.button-container {
+  margin-top: 20px;
+}
+
 button {
   padding: 10px 20px;
   font-size: 16px;
-  margin: 10px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
-  color: white;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #0056b3;
+.btn-accept {
+  background-color: green;
+  color: white;
 }
 
-.notification {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
+.btn-reject {
+  background-color: red;
   color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  z-index: 1000;
-  font-size: 14px;
+}
+
+.btn-speaker {
+  background-color: blue;
+  color: white;
+}
+
+.btn-end {
+  background-color: red;
+  color: white;
 }
