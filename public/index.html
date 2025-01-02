@@ -8,27 +8,36 @@
 </head>
 <body>
   <h1>Call App</h1>
-  <div>
+
+  <!-- تسجيل المستخدم -->
+  <div class="input-group">
     <label for="userId">Your ID:</label>
     <input type="text" id="userId" placeholder="Enter your ID">
     <button id="registerBtn">Register</button>
   </div>
   <br>
-  <div>
+
+  <!-- بدء المكالمة -->
+  <div class="input-group">
     <label for="callId">Call ID:</label>
     <input type="text" id="callId" placeholder="Enter call ID">
     <button id="callBtn">Call</button>
   </div>
   <br>
-  <div id="callActions" style="display: none;">
-    <button id="acceptCallBtn" style="background-color: green; color: white;">Accept</button>
-    <button id="rejectCallBtn" style="background-color: red; color: white;">Reject</button>
+
+  <!-- إجراءات المكالمة الواردة -->
+  <div id="callActions" class="call-actions" style="display: none;">
+    <button id="acceptCallBtn" class="btn-accept">Accept</button>
+    <button id="rejectCallBtn" class="btn-reject">Reject</button>
   </div>
   <br>
-  <div>
+
+  <!-- سجل المكالمات -->
+  <div class="call-log">
     <button id="showLogBtn">Show Call Log</button>
     <ul id="callLog"></ul>
   </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
 </body>
