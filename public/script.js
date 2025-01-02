@@ -38,8 +38,9 @@ document.getElementById('callBtn').addEventListener('click', () => {
 
 // استقبال مكالمة واردة
 socket.on('incoming_call', ({ callerId }) => {
-  notificationSound.play().catch(() => {
+  notificationSound.play().catch((error) => {
     showNotification('Failed to play ringtone.');
+    console.error('Audio error:', error);
   });
   showNotification(`Incoming call from ${callerId}`);
   document.getElementById('callActions').style.display = 'block';
