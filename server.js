@@ -15,7 +15,7 @@ const io = new Server(server);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// اتصال MongoDB
+// MongoDB Connection
 const mongoURI = 'mongodb+srv://yassinonur:Artega%402025@chatdatabase.lwadf.mongodb.net/?retryWrites=true&w=majority&appName=chatdatabase';
 
 mongoose.connect(mongoURI, {
@@ -27,7 +27,7 @@ mongoose.connect(mongoURI, {
   console.error('Error connecting to MongoDB:', err);
 });
 
-// إدارة المستخدمين
+// User registration endpoint
 app.post('/register', async (req, res) => {
   const { username, email, phone, password } = req.body;
 
@@ -40,7 +40,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// إرسال رسالة
+// Send message endpoint
 app.post('/send-message', async (req, res) => {
   const { sender, recipient, content } = req.body;
 
@@ -53,7 +53,7 @@ app.post('/send-message', async (req, res) => {
   }
 });
 
-// استرجاع الرسائل
+// Retrieve messages endpoint
 app.get('/messages/:username', async (req, res) => {
   const { username } = req.params;
 
@@ -63,11 +63,11 @@ app.get('/messages/:username', async (req, res) => {
     }).sort({ timestamp: -1 });
     res.status(200).json(messages);
   } catch (err) {
-    res.status(500).send('Error fetching messages');
+    res.status(500).send('Error fetching messages: ' + err.message);
   }
 });
 
-// البحث عن المستخدمين
+// Search for users endpoint
 app.get('/users', async (req, res) => {
   const { search } = req.query;
 
@@ -85,7 +85,7 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// Socket.IO
+// Socket.IO for real-time messaging
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// تشغيل الخادم
+// Start the server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
