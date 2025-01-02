@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
   });
 
   // قبول المكالمة
-  socket.on('accept_call', ({ callerId, calleeId }) => {
+  socket.on('accept_call', ({ callerId }) => {
     const callerSocket = users[callerId];
     if (callerSocket) {
       io.to(callerSocket).emit('redirect_to_call');
@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
     const otherUserSocket = users[otherUserId];
     if (otherUserSocket) {
       io.to(otherUserSocket).emit('call_ended');
-      io.to(socket.id).emit('call_ended'); // إشعار المستخدم الذي أنهى المكالمة
+      io.to(socket.id).emit('call_ended');
     }
   });
 
