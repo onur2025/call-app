@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
 
     const calleeSocket = users[calleeId];
     if (calleeSocket) {
-      io.to(calleeSocket).emit('incoming_call', { callerId, calleeId });
+      io.to(calleeSocket).emit('incoming_call', { callerId });
       io.to(users[callerId]).emit('call_initiated', { calleeId });
     } else {
       socket.emit('user_unavailable');
