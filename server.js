@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
     if (calleeSocket) {
       io.to(calleeSocket).emit('incoming_call', { callerId, calleeId }); // إرسال callerId و calleeId
     } else {
-      socket.emit('user_unavailable');
+      socket.emit('user_unavailable', { message: 'User is unavailable.' });
     }
   });
 
@@ -46,9 +46,14 @@ io.on('connection', (socket) => {
 
   // إنهاء المكالمة
   socket.on('end_call', ({ otherUserId }) => {
+    console.log(`End call event received. Other user ID: ${otherUserId}`);
     const otherUserSocket = users[otherUserId];
     if (otherUserSocket) {
+      console.log(`Notifying user ${otherUserId} about call ended.`);
       io.to(otherUserSocket).emit('call_ended'); // إبلاغ الطرف الآخر بإنهاء المكالمة
+    } else {
+      console.log(`User ${otherUserId} not found or disconnected.`);
+      socket.emit('user_unavailable', { message: 'The other user is not available.' });
     }
   });
 
@@ -57,6 +62,7 @@ io.on('connection', (socket) => {
     console.log('User disconnected:', socket.id);
     for (const [userId, socketId] of Object.entries(users)) {
       if (socketId === socket.id) {
+        console.log(`Removing user ${userId} due to disconnection.`);
         delete users[userId];
         break;
       }
