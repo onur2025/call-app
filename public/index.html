@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,27 +7,26 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Call App</h1>
-  <div>
+  <h1 style="text-align: center; color: #333;">Call App</h1>
+  <div style="text-align: center; margin-bottom: 20px;">
     <label for="userId">Your ID:</label>
-    <input type="text" id="userId" placeholder="Enter your ID">
-    <button id="registerBtn">Register</button>
+    <input type="text" id="userId" placeholder="Enter your ID" style="margin-right: 10px;">
+    <button id="registerBtn" style="background-color: #007bff; color: white;">Register</button>
   </div>
-  <br>
-  <div>
+  <div style="text-align: center; margin-bottom: 20px;">
     <label for="callId">Call ID:</label>
-    <input type="text" id="callId" placeholder="Enter call ID">
-    <button id="callBtn">Call</button>
+    <input type="text" id="callId" placeholder="Enter call ID" style="margin-right: 10px;">
+    <button id="callBtn" style="background-color: #007bff; color: white;">Call</button>
   </div>
-  <br>
-  <div id="callActions" style="display: none;">
-    <button id="acceptCallBtn" style="background-color: green; color: white;">Accept</button>
+  <div id="callActions" style="text-align: center; display: none; margin-bottom: 20px;">
+    <button id="acceptCallBtn" style="background-color: green; color: white; margin-right: 10px;">Accept</button>
     <button id="rejectCallBtn" style="background-color: red; color: white;">Reject</button>
   </div>
-  <br>
-  <div>
-    <button id="showLogBtn">Show Call Log</button>
-    <ul id="callLog"></ul>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button id="showLogBtn" style="background-color: #007bff; color: white;">Show Call Log</button>
+  </div>
+  <div style="text-align: center;">
+    <ul id="callLog" style="list-style: none; padding: 0;"></ul>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
