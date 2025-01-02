@@ -31,9 +31,11 @@ io.on('connection', (socket) => {
 
     const calleeSocket = users[calleeId];
     if (calleeSocket) {
+      console.log(`Call initiated from ${callerId} to ${calleeId}`);
       io.to(calleeSocket).emit('incoming_call', { callerId });
       io.to(users[callerId]).emit('call_initiated', { calleeId });
     } else {
+      console.log(`Callee ${calleeId} is unavailable.`);
       socket.emit('user_unavailable');
     }
   });
@@ -55,20 +57,12 @@ io.on('connection', (socket) => {
     }
   });
 
-  // إنهاء المكالمة
-  socket.on('end_call', ({ otherUserId }) => {
-    const otherUserSocket = users[otherUserId];
-    if (otherUserSocket) {
-      io.to(otherUserSocket).emit('call_ended');
-      io.to(socket.id).emit('call_ended');
-    }
-  });
-
   // فصل المستخدم
   socket.on('disconnect', () => {
     for (const [userId, socketId] of Object.entries(users)) {
       if (socketId === socket.id) {
         delete users[userId];
+        console.log(`User disconnected: ${userId}`);
         break;
       }
     }
