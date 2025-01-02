@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB Connection
-const mongoURI = 'mongodb+srv://yassinonur:Artega%402025@chatdatabase.lwadf.mongodb.net/?retryWrites=true&w=majority&appName=chatdatabase';
+const mongoURI = 'mongodb+srv://yassinonur:fTWv5P.JaYLhfiF@chatdatabase.lwadf.mongodb.net/?retryWrites=true&w=majority&appName=chatdatabase';
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
