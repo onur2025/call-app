@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
     const otherUserSocket = users[otherUserId];
     if (otherUserSocket) {
       io.to(otherUserSocket).emit('call_ended');
-      io.to(socket.id).emit('call_ended'); // إشعار المستخدم الذي أنهى المكالمة
+      io.to(socket.id).emit('call_ended');
     }
   });
 
