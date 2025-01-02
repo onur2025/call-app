@@ -1,6 +1,5 @@
 const notificationSound = new Audio('notification.mp3');
-const callLog = [];
-const socket = io('https://call-app-n3pl.onrender.com'); // الاتصال بالخادم
+const socket = io('http://localhost:3000'); // الاتصال بالخادم
 
 // دالة لإظهار الإشعارات
 const showNotification = (message) => {
@@ -31,7 +30,6 @@ document.getElementById('callBtn').addEventListener('click', () => {
   const callId = document.getElementById('callId').value;
   if (userId && callId) {
     socket.emit('call', { callerId: userId, calleeId: callId });
-    callLog.push({ type: 'Outgoing', to: callId, time: new Date().toLocaleString() });
     showNotification(`Calling ${callId}...`);
   } else {
     showNotification('Please fill in both fields.');
@@ -39,22 +37,18 @@ document.getElementById('callBtn').addEventListener('click', () => {
 });
 
 // استقبال مكالمة واردة
-socket.on('incoming_call', ({ callerId, calleeId }) => {
-  const userId = document.getElementById('userId').value;
-  if (userId === calleeId) {
-    notificationSound.play();
-    showNotification(`Incoming call from ${callerId}`);
-    document.getElementById('callActions').style.display = 'block';
-    document.getElementById('callActions').setAttribute('data-caller-id', callerId);
-  }
+socket.on('incoming_call', ({ callerId }) => {
+  notificationSound.play();
+  showNotification(`Incoming call from ${callerId}`);
+  document.getElementById('callActions').style.display = 'block';
+  document.getElementById('callActions').setAttribute('data-caller-id', callerId);
 });
 
 // قبول المكالمة
 document.getElementById('acceptCallBtn').addEventListener('click', () => {
   const callerId = document.getElementById('callActions').getAttribute('data-caller-id');
-  sessionStorage.setItem('otherUserId', callerId);
-  socket.emit('accept_call', { callerId });
-  window.location.href = 'call.html';
+  const calleeId = document.getElementById('userId').value;
+  socket.emit('accept_call', { callerId, calleeId });
 });
 
 // رفض المكالمة
@@ -64,8 +58,13 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
   document.getElementById('callActions').style.display = 'none';
 });
 
+// التوجيه إلى صفحة الاتصال
+socket.on('redirect_to_call', () => {
+  window.location.href = 'call.html';
+});
+
 // إنهاء المكالمة
 socket.on('call_ended', () => {
-  showNotification('The call has been ended by the other party.');
+  showNotification('The call has been ended.');
   window.location.href = 'index.html';
 });
