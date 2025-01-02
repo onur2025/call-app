@@ -3,32 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Call App</title>
+  <title>Chat App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to Call App</h1>
-
-    <div class="input-group">
-      <label for="userId">Your ID:</label>
-      <input type="text" id="userId" placeholder="Enter your ID">
-      <button id="registerBtn" class="btn-primary">Register</button>
+  <div class="app-container">
+    <!-- الشريط الجانبي -->
+    <div class="sidebar">
+      <h2>Chats</h2>
+      <ul id="chatList">
+        <!-- المحادثات ستضاف ديناميكيًا -->
+      </ul>
     </div>
 
-    <div class="input-group">
-      <label for="callId">Call ID:</label>
-      <input type="text" id="callId" placeholder="Enter call ID">
-      <button id="callBtn" class="btn-primary">Call</button>
-    </div>
-
-    <div id="callActions" class="call-actions" style="display: none;">
-      <button id="acceptCallBtn" class="btn-success">Accept</button>
-      <button id="rejectCallBtn" class="btn-danger">Reject</button>
+    <!-- منطقة الرسائل -->
+    <div class="chat-area">
+      <div class="chat-header">
+        <h3 id="chatHeader">Select a chat</h3>
+      </div>
+      <div class="messages" id="messages">
+        <!-- الرسائل ستعرض هنا -->
+      </div>
+      <div class="message-input">
+        <input type="text" id="messageInput" placeholder="Type a message...">
+        <button id="sendMessageBtn">Send</button>
+      </div>
     </div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
