@@ -4,67 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>In Call</title>
-  <style>
-    body {
-      background-image: url('green 1.jpg'); /* تحديث المسار */
-      background-size: cover;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
-    }
-    .button-container {
-      margin-top: 100px;
-    }
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-    .icon {
-      width: 100px;
-      height: 100px;
-    }
-    #speakerBtn img {
-      width: 100px;
-      height: 100px;
-    }
-    #endCallBtn img {
-      width: 100px;
-      height: 100px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>In Call</h1>
   <div class="button-container">
-    <button id="speakerBtn">
-      <img src="speaker11.png" alt="Speaker Icon" class="icon"> <!-- تحديث المسار -->
-    </button>
-    <button id="endCallBtn">
-      <img src="red.png" alt="End Call Icon" class="icon"> <!-- تحديث المسار -->
-    </button>
+    <button id="speakerBtn" style="background-color: blue; color: white;">🔊 Speaker</button>
+    <button id="endCallBtn" style="background-color: red; color: white;">📞 End Call</button>
   </div>
-  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io('https://call-app-n3pl.onrender.com');
+    const socket = io('http://localhost:3000');
+    const otherUserId = sessionStorage.getItem('otherUserId');
 
-    let isSpeakerOn = false;
-
-    document.getElementById('speakerBtn').addEventListener('click', () => {
-      isSpeakerOn = !isSpeakerOn;
-      console.log('Speaker mode:', isSpeakerOn ? 'ON' : 'OFF');
-      alert(isSpeakerOn ? 'Speaker is ON' : 'Speaker is OFF');
-    });
-
+    // إنهاء المكالمة
     document.getElementById('endCallBtn').addEventListener('click', () => {
-      const otherUserId = sessionStorage.getItem('otherUserId');
       if (otherUserId) {
         socket.emit('end_call', { otherUserId });
+        alert('You ended the call.');
       }
       window.location.href = 'index.html';
     });
 
+    // التعامل مع حدث إنهاء المكالمة من الطرف الآخر
     socket.on('call_ended', () => {
       alert('The call has been ended by the other party.');
       window.location.href = 'index.html';
