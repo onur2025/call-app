@@ -2,9 +2,8 @@ const notificationSound = new Audio('notification.mp3'); // صوت الإشعا�
 const callLog = []; // سجل المكالمات
 let callTimeout; // مؤقت المكالمة
 
-const socket = io('https://call-app-n3pl.onrender.com'); // الاتصال بالخادم
+const socket = io('http://localhost:3000'); // الاتصال بالخادم
 
-// دالة لإظهار الإشعارات داخل التطبيق
 const showNotification = (message) => {
   const notification = document.createElement('div');
   notification.textContent = message;
@@ -13,7 +12,7 @@ const showNotification = (message) => {
 
   setTimeout(() => {
     notification.remove();
-  }, 5000); // الإشعار يختفي بعد 5 ثوانٍ
+  }, 5000);
 };
 
 // تسجيل المستخدم
@@ -44,9 +43,7 @@ document.getElementById('callBtn').addEventListener('click', () => {
 socket.on('incoming_call', ({ callerId, calleeId }) => {
   const userId = document.getElementById('userId').value;
   if (userId === calleeId) {
-    notificationSound.play().catch((error) => {
-      console.error('Failed to play notification sound:', error);
-    });
+    notificationSound.play();
     showNotification(`Incoming call from ${callerId}`);
     document.getElementById('callActions').style.display = 'block';
     document.getElementById('callActions').setAttribute('data-caller-id', callerId);
@@ -55,7 +52,7 @@ socket.on('incoming_call', ({ callerId, calleeId }) => {
       showNotification('Call timed out.');
       socket.emit('timeout_call', { callerId });
       document.getElementById('callActions').style.display = 'none';
-    }, 10000); // 10 ثوانٍ للرد على المكالمة
+    }, 10000);
   }
 });
 
@@ -65,7 +62,6 @@ document.getElementById('acceptCallBtn').addEventListener('click', () => {
   clearTimeout(callTimeout);
   sessionStorage.setItem('otherUserId', callerId);
   socket.emit('accept_call', { callerId });
-  showNotification(`Accepted the call from ${callerId}.`);
   window.location.href = 'call.html';
 });
 
@@ -74,14 +70,7 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
   const callerId = document.getElementById('callActions').getAttribute('data-caller-id');
   clearTimeout(callTimeout);
   socket.emit('reject_call', { callerId });
-  showNotification(`Rejected the call from ${callerId}.`);
   document.getElementById('callActions').style.display = 'none';
-});
-
-// استقبال حدث إعادة التوجيه إلى المكالمة
-socket.on('redirect_to_call', () => {
-  showNotification('Call connected. Redirecting...');
-  window.location.href = 'call.html';
 });
 
 // إنهاء المكالمة
@@ -91,7 +80,7 @@ document.getElementById('endCallBtn')?.addEventListener('click', () => {
     socket.emit('end_call', { otherUserId });
     showNotification('You ended the call.');
   }
-  window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية
+  window.location.href = 'index.html';
 });
 
 // استقبال حدث إنهاء المكالمة
@@ -103,7 +92,7 @@ socket.on('call_ended', () => {
 // عرض سجل المكالمات
 document.getElementById('showLogBtn')?.addEventListener('click', () => {
   const logContainer = document.getElementById('callLog');
-  logContainer.innerHTML = ''; // تفريغ السجل القديم
+  logContainer.innerHTML = '';
 
   if (callLog.length === 0) {
     logContainer.innerHTML = '<li>No calls yet.</li>';
