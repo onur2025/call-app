@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
     const calleeSocket = users[calleeId];
     if (calleeSocket) {
       console.log(`Notifying ${calleeId} of incoming call from ${callerId}`);
-      io.to(calleeSocket).emit('incoming_call', { callerId, calleeId }); // إرسال callerId و calleeId
+      io.to(calleeSocket).emit('incoming_call', { callerId, calleeId });
     } else {
       console.log(`User ${calleeId} is unavailable`);
       socket.emit('user_unavailable');
@@ -37,7 +37,9 @@ io.on('connection', (socket) => {
     const callerSocket = users[callerId];
     if (callerSocket) {
       console.log(`Notifying ${callerId} to redirect to call.html`);
-      io.to(callerSocket).emit('redirect_to_call'); // إعادة توجيه المتصل إلى صفحة المكالمة
+      io.to(callerSocket).emit('redirect_to_call');
+    } else {
+      console.log(`Caller ${callerId} is not connected.`);
     }
   });
 
@@ -47,7 +49,7 @@ io.on('connection', (socket) => {
     const callerSocket = users[callerId];
     if (callerSocket) {
       console.log(`Notifying ${callerId} that call was rejected`);
-      io.to(callerSocket).emit('call_rejected'); // إعلام المتصل برفض المكالمة
+      io.to(callerSocket).emit('call_rejected');
     }
   });
 
@@ -57,7 +59,7 @@ io.on('connection', (socket) => {
     const otherUserSocket = users[otherUserId];
     if (otherUserSocket) {
       console.log(`Notifying user ${otherUserId} about call ended.`);
-      io.to(otherUserSocket).emit('call_ended'); // إبلاغ الطرف الآخر بإنهاء المكالمة
+      io.to(otherUserSocket).emit('call_ended');
     } else {
       console.log(`User ${otherUserId} not found or disconnected.`);
       socket.emit('user_unavailable', { message: 'The other user is not available.' });
