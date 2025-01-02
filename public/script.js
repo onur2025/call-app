@@ -38,17 +38,17 @@ document.getElementById('callBtn').addEventListener('click', () => {
 
 // استقبال مكالمة واردة
 socket.on('incoming_call', ({ callerId }) => {
-  notificationSound.play().catch((error) => {
-    showNotification('Failed to play ringtone.');
-    console.error('Audio error:', error);
+  console.log(`Incoming call from ${callerId}`);
+  notificationSound.play().catch(() => {
+    console.log('Failed to play ringtone.');
   });
-  showNotification(`Incoming call from ${callerId}`);
   document.getElementById('callActions').style.display = 'block';
   document.getElementById('callActions').setAttribute('data-caller-id', callerId);
 });
 
 // إشعار عند بدء الاتصال من المتصل
 socket.on('call_initiated', ({ calleeId }) => {
+  console.log(`Calling ${calleeId}`);
   showNotification(`Calling ${calleeId}...`);
 });
 
@@ -68,10 +68,4 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
 // التوجيه إلى صفحة الاتصال
 socket.on('redirect_to_call', () => {
   window.location.href = 'call.html';
-});
-
-// إنهاء المكالمة
-socket.on('call_ended', () => {
-  showNotification('The call has been ended.');
-  window.location.href = 'index.html';
 });
