@@ -4,6 +4,7 @@ let callTimeout; // لتخزين المؤقت لفصل الاتصال تلقائ
 
 // دالة لإظهار الإشعارات
 const showNotification = (message) => {
+  console.log('Notification:', message); // سجل الإشعار
   const notification = document.createElement('div');
   notification.textContent = message;
   notification.className = 'notification';
@@ -20,6 +21,7 @@ const socket = io('https://call-app-n3pl.onrender.com'); // رابط الخاد�
 // تسجيل المستخدم
 document.getElementById('registerBtn').addEventListener('click', () => {
   const userId = document.getElementById('userId').value;
+  console.log('Registering user:', userId); // سجل العملية
   if (userId) {
     socket.emit('register', { userId });
     showNotification('Registered successfully!');
@@ -31,10 +33,11 @@ document.getElementById('registerBtn').addEventListener('click', () => {
 // بدء مكالمة
 document.getElementById('callBtn').addEventListener('click', () => {
   const userId = document.getElementById('userId').value;
-  const callId = document.getElementById('callId').value; // استخدام callId بدلًا من calleeId
+  const callId = document.getElementById('callId').value;
+  console.log(`Calling ${callId} from ${userId}`); // سجل العملية
   if (userId && callId) {
-    socket.emit('call', { callerId: userId, calleeId: callId }); // تمرير callId كـ calleeId للخادم
-    callLog.push({ type: 'Outgoing', to: callId, time: new Date().toLocaleString() }); // تسجيل المكالمة الصادرة
+    socket.emit('call', { callerId: userId, calleeId: callId });
+    callLog.push({ type: 'Outgoing', to: callId, time: new Date().toLocaleString() });
     showNotification(`Calling ${callId}...`);
   } else {
     showNotification('Please fill in both IDs.');
@@ -43,23 +46,22 @@ document.getElementById('callBtn').addEventListener('click', () => {
 
 // استقبال مكالمة واردة
 socket.on('incoming_call', ({ callerId, calleeId }) => {
+  console.log(`Incoming call from ${callerId} to ${calleeId}`);
   const userId = document.getElementById('userId').value;
 
   if (userId === calleeId) {
     notificationSound.play(); // تشغيل الصوت
     showNotification(`Incoming call from: ${callerId}`);
-    
-    // إظهار أزرار القبول والرفض فقط للمستقبل
     const callActions = document.getElementById('callActions');
     callActions.style.display = 'block';
     callActions.setAttribute('data-caller-id', callerId);
 
-    // بدء عداد زمني لفصل المكالمة تلقائيًا بعد 10 ثوانٍ
     callTimeout = setTimeout(() => {
+      console.log(`Call timeout for ${callerId}`);
       socket.emit('timeout_call', { callerId });
       showNotification('Call timed out.');
-      callActions.style.display = 'none'; // إخفاء الأزرار
-    }, 10000); // 10 ثوانٍ
+      callActions.style.display = 'none';
+    }, 10000);
   }
 });
 
@@ -67,14 +69,11 @@ socket.on('incoming_call', ({ callerId, calleeId }) => {
 document.getElementById('acceptCallBtn').addEventListener('click', () => {
   const callActions = document.getElementById('callActions');
   const callerId = callActions.getAttribute('data-caller-id');
-
-  clearTimeout(callTimeout); // إلغاء المؤقت
-  sessionStorage.setItem('otherUserId', callerId); // تخزين معرف الطرف الآخر
-  console.log('Storing otherUserId:', callerId); // سجل لتأكيد التخزين
+  console.log(`Accepting call from ${callerId}`);
+  clearTimeout(callTimeout);
+  sessionStorage.setItem('otherUserId', callerId);
   socket.emit('accept_call', { callerId });
   showNotification(`You accepted the call from ${callerId}.`);
-
-  // الانتقال إلى صفحة الاتصال
   window.location.href = 'call.html';
 });
 
@@ -82,54 +81,27 @@ document.getElementById('acceptCallBtn').addEventListener('click', () => {
 document.getElementById('rejectCallBtn').addEventListener('click', () => {
   const callActions = document.getElementById('callActions');
   const callerId = callActions.getAttribute('data-caller-id');
-
-  clearTimeout(callTimeout); // إلغاء المؤقت
+  console.log(`Rejecting call from ${callerId}`);
+  clearTimeout(callTimeout);
   socket.emit('reject_call', { callerId });
   showNotification(`You rejected the call from ${callerId}.`);
-
-  // إخفاء الأزرار بعد الرفض
   callActions.style.display = 'none';
 });
 
-// استقبال حدث إعادة التوجيه إلى صفحة الاتصال
-socket.on('redirect_to_call', () => {
-  console.log('Redirecting to call.html'); // سجل لتأكيد الحدث
-  window.location.href = 'call.html';
-});
-
-// إنهاء المكالمة عند الضغط على الزر الأحمر
+// إنهاء المكالمة
 document.getElementById('endCallBtn')?.addEventListener('click', () => {
-  const otherUserId = sessionStorage.getItem('otherUserId'); // الحصول على معرف الطرف الآخر
-  console.log('Ending call with:', otherUserId); // سجل لمعرف الطرف الآخر
+  const otherUserId = sessionStorage.getItem('otherUserId');
+  console.log('Ending call with:', otherUserId);
   if (otherUserId) {
-    socket.emit('end_call', { otherUserId }); // إرسال الحدث إلى الخادم
+    socket.emit('end_call', { otherUserId });
     showNotification('You ended the call.');
-  } else {
-    console.log('No otherUserId found in sessionStorage.');
   }
-  window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية
+  window.location.href = 'index.html';
 });
 
-// استقبال حدث إنهاء المكالمة من الطرف الآخر
+// استقبال حدث إنهاء المكالمة
 socket.on('call_ended', () => {
-  console.log('Call ended by the other party.'); // سجل عند استقبال الحدث
+  console.log('Call ended by the other party.');
   alert('The call has been ended by the other party.');
-  window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية
-});
-
-// استقبال رفض المكالمة
-socket.on('call_rejected', () => {
-  console.log('The call was rejected.'); // سجل لتأكيد الحدث
-  showNotification('The call was rejected.');
-});
-
-// عرض سجل المكالمات
-document.getElementById('showLogBtn').addEventListener('click', () => {
-  const logContainer = document.getElementById('callLog');
-  logContainer.innerHTML = ''; // تفريغ السجل القديم
-  callLog.forEach((log) => {
-    const logItem = document.createElement('li');
-    logItem.textContent = `${log.type} call ${log.type === 'Incoming' ? 'from' : 'to'} ${log.type === 'Incoming' ? log.from : log.to} at ${log.time}`;
-    logContainer.appendChild(logItem);
-  });
+  window.location.href = 'index.html';
 });
