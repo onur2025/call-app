@@ -70,6 +70,7 @@ document.getElementById('acceptCallBtn').addEventListener('click', () => {
 
   clearTimeout(callTimeout); // إلغاء المؤقت
   sessionStorage.setItem('otherUserId', callerId); // تخزين معرف الطرف الآخر
+  console.log('Storing otherUserId:', callerId); // سجل لتأكيد التخزين
   socket.emit('accept_call', { callerId });
   showNotification(`You accepted the call from ${callerId}.`);
 
@@ -92,25 +93,33 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
 
 // استقبال حدث إعادة التوجيه إلى صفحة الاتصال
 socket.on('redirect_to_call', () => {
+  console.log('Redirecting to call.html'); // سجل لتأكيد الحدث
   window.location.href = 'call.html';
 });
 
 // إنهاء المكالمة عند الضغط على الزر الأحمر
 document.getElementById('endCallBtn')?.addEventListener('click', () => {
   const otherUserId = sessionStorage.getItem('otherUserId'); // الحصول على معرف الطرف الآخر
-  socket.emit('end_call', { otherUserId }); // إرسال الحدث إلى الخادم
-  showNotification('You ended the call.');
+  console.log('Ending call with:', otherUserId); // سجل لمعرف الطرف الآخر
+  if (otherUserId) {
+    socket.emit('end_call', { otherUserId }); // إرسال الحدث إلى الخادم
+    showNotification('You ended the call.');
+  } else {
+    console.log('No otherUserId found in sessionStorage.');
+  }
   window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية
 });
 
 // استقبال حدث إنهاء المكالمة من الطرف الآخر
 socket.on('call_ended', () => {
+  console.log('Call ended by the other party.'); // سجل عند استقبال الحدث
   alert('The call has been ended by the other party.');
   window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية
 });
 
 // استقبال رفض المكالمة
 socket.on('call_rejected', () => {
+  console.log('The call was rejected.'); // سجل لتأكيد الحدث
   showNotification('The call was rejected.');
 });
 
