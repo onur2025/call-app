@@ -44,6 +44,14 @@ io.on('connection', (socket) => {
     }
   });
 
+  // إنهاء المكالمة
+  socket.on('end_call', ({ otherUserId }) => {
+    const otherUserSocket = users[otherUserId];
+    if (otherUserSocket) {
+      io.to(otherUserSocket).emit('call_ended'); // إبلاغ الطرف الآخر بإنهاء المكالمة
+    }
+  });
+
   // عند فصل المستخدم
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
@@ -56,10 +64,8 @@ io.on('connection', (socket) => {
   });
 });
 
-// تقديم الملفات الثابتة (static files)
 app.use(express.static(path.join(__dirname, 'public')));
 
 server.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
-
