@@ -3,30 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Call App</title>
+  <title>VoIP App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1 style="text-align: center; color: #333;">Call App</h1>
-  <div style="text-align: center; margin-bottom: 20px;">
+  <h1>VoIP App</h1>
+  <div>
     <label for="userId">Your ID:</label>
-    <input type="text" id="userId" placeholder="Enter your ID" style="margin-right: 10px;">
-    <button id="registerBtn" style="background-color: #007bff; color: white;">Register</button>
+    <input type="text" id="userId" placeholder="Enter your ID">
+    <button id="registerBtn">Register</button>
   </div>
-  <div style="text-align: center; margin-bottom: 20px;">
+  <br>
+  <div>
     <label for="callId">Call ID:</label>
-    <input type="text" id="callId" placeholder="Enter call ID" style="margin-right: 10px;">
-    <button id="callBtn" style="background-color: #007bff; color: white;">Call</button>
+    <input type="text" id="callId" placeholder="Enter call ID">
+    <button id="callBtn">Call</button>
   </div>
-  <div id="callActions" style="text-align: center; display: none; margin-bottom: 20px;">
-    <button id="acceptCallBtn" style="background-color: green; color: white; margin-right: 10px;">Accept</button>
+  <br>
+  <div id="callActions" style="display: none;">
+    <button id="acceptCallBtn" style="background-color: green; color: white;">Accept</button>
     <button id="rejectCallBtn" style="background-color: red; color: white;">Reject</button>
   </div>
-  <div style="text-align: center; margin-bottom: 20px;">
-    <button id="showLogBtn" style="background-color: #007bff; color: white;">Show Call Log</button>
-  </div>
-  <div style="text-align: center;">
-    <ul id="callLog" style="list-style: none; padding: 0;"></ul>
+  <br>
+  <div>
+    <button id="showLogBtn">Show Call Log</button>
+    <ul id="callLog"></ul>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
