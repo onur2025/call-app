@@ -3,15 +3,40 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f4f4f4;
-  text-align: center;
-}
-
-h1 {
   color: #333;
 }
 
-.button-container {
-  margin-top: 20px;
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 button {
@@ -20,24 +45,41 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
-.btn-accept {
-  background-color: green;
+.btn-primary {
+  background-color: #007bff;
   color: white;
 }
 
-.btn-reject {
-  background-color: red;
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-success {
+  background-color: #28a745;
   color: white;
 }
 
-.btn-speaker {
-  background-color: blue;
+.btn-danger {
+  background-color: #dc3545;
   color: white;
 }
 
-.btn-end {
-  background-color: red;
-  color: white;
+.btn-danger:hover {
+  background-color: #a71d2a;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.call-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
