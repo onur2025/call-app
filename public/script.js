@@ -1,37 +1,19 @@
-const chatList = document.getElementById('chatList');
-const messages = document.getElementById('messages');
-const messageInput = document.getElementById('messageInput');
-const sendMessageBtn = document.getElementById('sendMessageBtn');
+document.getElementById('registerBtn').addEventListener('click', () => {
+  const username = document.getElementById('username').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const password = document.getElementById('password').value;
 
-// بيانات افتراضية للمحادثات
-const chats = [
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'Jane Smith' }
-];
-
-// تحميل المحادثات في الشريط الجانبي
-chats.forEach(chat => {
-  const li = document.createElement('li');
-  li.textContent = chat.name;
-  li.dataset.id = chat.id;
-  li.addEventListener('click', () => selectChat(chat));
-  chatList.appendChild(li);
-});
-
-// عرض الرسائل
-const selectChat = (chat) => {
-  document.getElementById('chatHeader').textContent = chat.name;
-  messages.innerHTML = ''; // إعادة تعيين الرسائل
-};
-
-// إرسال الرسائل
-sendMessageBtn.addEventListener('click', () => {
-  const message = messageInput.value.trim();
-  if (message) {
-    const div = document.createElement('div');
-    div.textContent = message;
-    div.style.marginBottom = '10px';
-    messages.appendChild(div);
-    messageInput.value = '';
+  if (username && email && password) {
+    fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, phone, password })
+    })
+      .then(response => response.text())
+      .then(data => alert(data))
+      .catch(err => console.error('Error:', err));
+  } else {
+    alert('Please fill all required fields.');
   }
 });
