@@ -17,20 +17,15 @@ io.on('connection', (socket) => {
     if (userData?.userId) {
       users[userData.userId] = socket.id;
       console.log(`User registered: ${userData.userId}`);
-    } else {
-      console.log('Invalid registration data:', userData);
     }
   });
 
   // بدء المكالمة
   socket.on('call', ({ callerId, calleeId }) => {
-    console.log(`Call initiated by ${callerId} to ${calleeId}`);
     const calleeSocket = users[calleeId];
     if (calleeSocket) {
       io.to(calleeSocket).emit('incoming_call', { callerId });
-      io.to(users[callerId]).emit('call_initiated', { calleeId });
     } else {
-      console.log(`Callee ${calleeId} is unavailable.`);
       socket.emit('user_unavailable');
     }
   });
@@ -41,7 +36,6 @@ io.on('connection', (socket) => {
     if (callerSocket) {
       io.to(callerSocket).emit('redirect_to_call');
       io.to(socket.id).emit('redirect_to_call');
-      console.log(`Call accepted by ${socket.id}`);
     }
   });
 
@@ -50,7 +44,6 @@ io.on('connection', (socket) => {
     const callerSocket = users[callerId];
     if (callerSocket) {
       io.to(callerSocket).emit('call_rejected');
-      console.log(`Call rejected by ${socket.id}`);
     }
   });
 
@@ -60,7 +53,6 @@ io.on('connection', (socket) => {
     if (otherUserSocket) {
       io.to(otherUserSocket).emit('call_ended');
       io.to(socket.id).emit('call_ended');
-      console.log(`Call ended between ${socket.id} and ${otherUserId}`);
     }
   });
 
