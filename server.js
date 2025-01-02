@@ -32,6 +32,7 @@ io.on('connection', (socket) => {
     const calleeSocket = users[calleeId];
     if (calleeSocket) {
       io.to(calleeSocket).emit('incoming_call', { callerId, calleeId });
+      io.to(users[callerId]).emit('call_initiated', { calleeId });
     } else {
       socket.emit('user_unavailable');
     }
@@ -42,7 +43,7 @@ io.on('connection', (socket) => {
     const callerSocket = users[callerId];
     if (callerSocket) {
       io.to(callerSocket).emit('redirect_to_call');
-      io.to(socket.id).emit('redirect_to_call'); // توجيه المستقبل أيضًا
+      io.to(socket.id).emit('redirect_to_call');
     }
   });
 
