@@ -1,7 +1,7 @@
 {
-  "name": "voip-app",
+  "name": "call-app",
   "version": "1.0.0",
-  "description": "A simple VoIP application using Node.js, Express, and Socket.IO",
+  "description": "A simple call application using Node.js, Express, and Socket.IO",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
