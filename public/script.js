@@ -88,7 +88,13 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
   callActions.style.display = 'none';
 });
 
-// إنهاء المكالمة
+// استقبال حدث إعادة التوجيه إلى صفحة الاتصال
+socket.on('redirect_to_call', () => {
+  console.log('Redirecting to call.html'); // سجل لتأكيد استقبال الحدث
+  window.location.href = 'call.html';
+});
+
+// إنهاء المكالمة عند الضغط على الزر الأحمر
 document.getElementById('endCallBtn')?.addEventListener('click', () => {
   const otherUserId = sessionStorage.getItem('otherUserId');
   console.log('Ending call with:', otherUserId);
