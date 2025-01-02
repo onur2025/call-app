@@ -1,4 +1,4 @@
-const notificationSound = new Audio('notification.mp3');
+const notificationSound = new Audio('notification.mp3'); // صوت الإشعارات
 const socket = io('http://localhost:3000');
 
 // دالة لإظهار الإشعارات
