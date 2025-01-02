@@ -8,29 +8,17 @@
 </head>
 <body>
   <div class="app-container">
-    <!-- الشريط الجانبي -->
-    <div class="sidebar">
-      <h2>Chats</h2>
-      <ul id="chatList">
-        <!-- المحادثات ستضاف ديناميكيًا -->
-      </ul>
-    </div>
-
-    <!-- منطقة الرسائل -->
-    <div class="chat-area">
-      <div class="chat-header">
-        <h3 id="chatHeader">Select a chat</h3>
-      </div>
-      <div class="messages" id="messages">
-        <!-- الرسائل ستعرض هنا -->
-      </div>
-      <div class="message-input">
-        <input type="text" id="messageInput" placeholder="Type a message...">
-        <button id="sendMessageBtn">Send</button>
-      </div>
+    <div class="register-form">
+      <h2>Register</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="email" id="email" placeholder="Email">
+      <input type="text" id="phone" placeholder="Phone (Optional)">
+      <input type="password" id="password" placeholder="Password">
+      <button id="registerBtn">Register</button>
     </div>
   </div>
 
+  <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
