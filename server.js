@@ -29,14 +29,14 @@ mongoose.connect(mongoURI, {
 
 // إدارة المستخدمين
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, phone, password } = req.body;
 
   try {
-    const user = new User({ username, password });
+    const user = new User({ username, email, phone, password });
     await user.save();
     res.status(201).send('User registered successfully');
   } catch (err) {
-    res.status(500).send('Error registering user');
+    res.status(500).send('Error registering user: ' + err.message);
   }
 });
 
@@ -67,12 +67,36 @@ app.get('/messages/:username', async (req, res) => {
   }
 });
 
+// البحث عن المستخدمين
+app.get('/users', async (req, res) => {
+  const { search } = req.query;
+
+  try {
+    const users = await User.find({
+      $or: [
+        { email: new RegExp(search, 'i') },
+        { phone: new RegExp(search, 'i') },
+        { username: new RegExp(search, 'i') }
+      ]
+    });
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).send('Error searching for users: ' + err.message);
+  }
+});
+
 // Socket.IO
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
+  socket.on('join_room', (room) => {
+    socket.join(room);
+    console.log(`User ${socket.id} joined room: ${room}`);
+  });
+
   socket.on('send_message', (data) => {
-    io.to(data.recipient).emit('receive_message', data);
+    const { room, message } = data;
+    io.to(room).emit('receive_message', message);
   });
 
   socket.on('disconnect', () => {
