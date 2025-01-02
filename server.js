@@ -20,26 +20,33 @@ io.on('connection', (socket) => {
 
   // بدء الاتصال
   socket.on('call', ({ callerId, calleeId }) => {
+    console.log(`Call initiated by ${callerId} to ${calleeId}`);
     const calleeSocket = users[calleeId];
     if (calleeSocket) {
+      console.log(`Notifying ${calleeId} of incoming call from ${callerId}`);
       io.to(calleeSocket).emit('incoming_call', { callerId, calleeId }); // إرسال callerId و calleeId
     } else {
-      socket.emit('user_unavailable', { message: 'User is unavailable.' });
+      console.log(`User ${calleeId} is unavailable`);
+      socket.emit('user_unavailable');
     }
   });
 
   // قبول المكالمة
   socket.on('accept_call', ({ callerId }) => {
+    console.log(`Call accepted by ${socket.id} for caller ${callerId}`);
     const callerSocket = users[callerId];
     if (callerSocket) {
+      console.log(`Notifying ${callerId} to redirect to call.html`);
       io.to(callerSocket).emit('redirect_to_call'); // إعادة توجيه المتصل إلى صفحة المكالمة
     }
   });
 
   // رفض المكالمة
   socket.on('reject_call', ({ callerId }) => {
+    console.log(`Call rejected by ${socket.id} for caller ${callerId}`);
     const callerSocket = users[callerId];
     if (callerSocket) {
+      console.log(`Notifying ${callerId} that call was rejected`);
       io.to(callerSocket).emit('call_rejected'); // إعلام المتصل برفض المكالمة
     }
   });
