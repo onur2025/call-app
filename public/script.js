@@ -42,6 +42,7 @@ socket.on('incoming_call', ({ callerId }) => {
   notificationSound.play().catch(() => {
     console.log('Failed to play ringtone.');
   });
+  showNotification(`Incoming call from ${callerId}`);
   document.getElementById('callActions').style.display = 'block';
   document.getElementById('callActions').setAttribute('data-caller-id', callerId);
 });
@@ -56,6 +57,7 @@ socket.on('call_initiated', ({ calleeId }) => {
 document.getElementById('acceptCallBtn').addEventListener('click', () => {
   const callerId = document.getElementById('callActions').getAttribute('data-caller-id');
   socket.emit('accept_call', { callerId });
+  sessionStorage.setItem('otherUserId', callerId);
 });
 
 // رفض المكالمة
@@ -68,4 +70,10 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
 // التوجيه إلى صفحة الاتصال
 socket.on('redirect_to_call', () => {
   window.location.href = 'call.html';
+});
+
+// إنهاء المكالمة
+socket.on('call_ended', () => {
+  showNotification('The call has been ended.');
+  window.location.href = 'index.html';
 });
