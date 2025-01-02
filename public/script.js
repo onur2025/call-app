@@ -4,6 +4,7 @@ let callTimeout; // مؤقت المكالمة
 
 const socket = io('http://localhost:3000'); // الاتصال بالخادم
 
+// دالة لإظهار الإشعارات داخل التطبيق
 const showNotification = (message) => {
   const notification = document.createElement('div');
   notification.textContent = message;
