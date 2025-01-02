@@ -17,38 +17,22 @@
     const socket = io('http://localhost:3000');
     const otherUserId = sessionStorage.getItem('otherUserId');
 
-    // تحقق من وجود معرف الطرف الآخر
     if (!otherUserId) {
       alert('No call in progress.');
       window.location.href = 'index.html';
     }
 
-    // إنهاء المكالمة
     document.getElementById('endCallBtn').addEventListener('click', () => {
       if (otherUserId) {
         socket.emit('end_call', { otherUserId });
-        showNotification('You ended the call.');
       }
       window.location.href = 'index.html';
     });
 
-    // التعامل مع حدث إنهاء المكالمة من الطرف الآخر
     socket.on('call_ended', () => {
-      showNotification('The call has been ended by the other party.');
+      alert('The call has been ended by the other party.');
       window.location.href = 'index.html';
     });
-
-    // دالة لإظهار الإشعارات داخل التطبيق
-    const showNotification = (message) => {
-      const notification = document.createElement('div');
-      notification.textContent = message;
-      notification.className = 'notification';
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        notification.remove();
-      }, 5000);
-    };
   </script>
 </body>
 </html>
