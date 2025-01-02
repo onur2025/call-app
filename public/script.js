@@ -1,9 +1,8 @@
-const notificationSound = new Audio('notification.mp3'); // صوت الإشعارات
-const callLog = []; // سجل المكالمات
+const notificationSound = new Audio('notification.mp3');
+const callLog = [];
+const socket = io('https://call-app-n3pl.onrender.com'); // الاتصال بالخادم
 
-const socket = io('http://localhost:3000'); // الاتصال بالخادم
-
-// دالة لإظهار الإشعارات داخل التطبيق
+// دالة لإظهار الإشعارات
 const showNotification = (message) => {
   const notification = document.createElement('div');
   notification.textContent = message;
@@ -69,21 +68,4 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
 socket.on('call_ended', () => {
   showNotification('The call has been ended by the other party.');
   window.location.href = 'index.html';
-});
-
-// عرض سجل المكالمات
-document.getElementById('showLogBtn').addEventListener('click', () => {
-  const logContainer = document.getElementById('callLog');
-  logContainer.innerHTML = '';
-
-  if (callLog.length === 0) {
-    logContainer.innerHTML = '<li>No calls yet.</li>';
-    return;
-  }
-
-  callLog.forEach((log) => {
-    const logItem = document.createElement('li');
-    logItem.textContent = `${log.type} call with ${log.to} at ${log.time}`;
-    logContainer.appendChild(logItem);
-  });
 });
