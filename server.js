@@ -1,75 +1,87 @@
 const express = require('express');
 const http = require('http');
+const mongoose = require('mongoose');
 const { Server } = require('socket.io');
 const path = require('path');
+
+const User = require('./models/User');
+const Message = require('./models/Message');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const users = {}; // تخزين المستخدمين المتصلين
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
+// اتصال MongoDB
+const mongoURI = 'mongodb+srv://yassinonur:zy7evVWg16Fiq7jY@chatdatabase.lwadf.mongodb.net/?retryWrites=true&w=majority&appName=chatdatabase';
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
+  console.error('Error connecting to MongoDB:', err);
+});
+
+// إدارة المستخدمين
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = new User({ username, password });
+    await user.save();
+    res.status(201).send('User registered successfully');
+  } catch (err) {
+    res.status(500).send('Error registering user');
+  }
+});
+
+// إرسال رسالة
+app.post('/send-message', async (req, res) => {
+  const { sender, recipient, content } = req.body;
+
+  try {
+    const message = new Message({ sender, recipient, content });
+    await message.save();
+    res.status(201).send('Message sent successfully');
+  } catch (err) {
+    res.status(500).send('Error sending message');
+  }
+});
+
+// استرجاع الرسائل
+app.get('/messages/:username', async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const messages = await Message.find({
+      $or: [{ sender: username }, { recipient: username }]
+    }).sort({ timestamp: -1 });
+    res.status(200).json(messages);
+  } catch (err) {
+    res.status(500).send('Error fetching messages');
+  }
+});
+
+// Socket.IO
 io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.id}`);
+  console.log('A user connected:', socket.id);
 
-  // تسجيل المستخدم
-  socket.on('register', (userData) => {
-    if (userData?.userId) {
-      users[userData.userId] = socket.id;
-      console.log(`User registered: ${userData.userId}`);
-    }
+  socket.on('send_message', (data) => {
+    io.to(data.recipient).emit('receive_message', data);
   });
 
-  // بدء المكالمة
-  socket.on('call', ({ callerId, calleeId }) => {
-    const calleeSocket = users[calleeId];
-    if (calleeSocket) {
-      io.to(calleeSocket).emit('incoming_call', { callerId });
-    } else {
-      socket.emit('user_unavailable');
-    }
-  });
-
-  // قبول المكالمة
-  socket.on('accept_call', ({ callerId }) => {
-    const callerSocket = users[callerId];
-    if (callerSocket) {
-      io.to(callerSocket).emit('redirect_to_call');
-      io.to(socket.id).emit('redirect_to_call');
-    }
-  });
-
-  // رفض المكالمة
-  socket.on('reject_call', ({ callerId }) => {
-    const callerSocket = users[callerId];
-    if (callerSocket) {
-      io.to(callerSocket).emit('call_rejected');
-    }
-  });
-
-  // إنهاء المكالمة
-  socket.on('end_call', ({ otherUserId }) => {
-    const otherUserSocket = users[otherUserId];
-    if (otherUserSocket) {
-      io.to(otherUserSocket).emit('call_ended');
-      io.to(socket.id).emit('call_ended');
-    }
-  });
-
-  // فصل المستخدم
   socket.on('disconnect', () => {
-    for (const [userId, socketId] of Object.entries(users)) {
-      if (socketId === socket.id) {
-        console.log(`User disconnected: ${userId}`);
-        delete users[userId];
-        break;
-      }
-    }
+    console.log('A user disconnected:', socket.id);
   });
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-server.listen(3000, () => {
-  console.log('Server is running on port 3000');
+// تشغيل الخادم
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
