@@ -3,28 +3,67 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f4f4f4;
+  text-align: center;
 }
 
 h1 {
-  text-align: center;
   color: #333;
 }
 
-button {
+.input-group {
+  margin: 20px 0;
+}
+
+.input-group label {
   display: block;
-  margin: 20px auto;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 200px;
+  margin-bottom: 10px;
+}
+
+button {
   padding: 10px 20px;
-  font-size: 18px;
+  font-size: 16px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
-  color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #ddd;
+}
+
+.call-actions {
+  margin: 20px 0;
+}
+
+.btn-accept {
+  background-color: green;
+  color: white;
+}
+
+.btn-reject {
+  background-color: red;
+  color: white;
+}
+
+.call-log ul {
+  list-style: none;
+  padding: 0;
+}
+
+.call-log li {
+  margin: 5px 0;
+  font-size: 14px;
 }
 
 .notification {
@@ -34,7 +73,20 @@ button:hover {
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 15px 20px;
+  padding: 10px 15px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  z-index: 1000;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
