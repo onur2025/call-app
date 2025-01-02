@@ -38,7 +38,9 @@ document.getElementById('callBtn').addEventListener('click', () => {
 
 // استقبال مكالمة واردة
 socket.on('incoming_call', ({ callerId }) => {
-  notificationSound.play();
+  notificationSound.play().catch(() => {
+    showNotification('Failed to play ringtone.');
+  });
   showNotification(`Incoming call from ${callerId}`);
   document.getElementById('callActions').style.display = 'block';
   document.getElementById('callActions').setAttribute('data-caller-id', callerId);
