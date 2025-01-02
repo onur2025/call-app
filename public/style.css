@@ -1,66 +1,42 @@
-/* تصميم الصفحة العامة */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4; /* لون خلفية عام */
+  background-color: #f4f4f4;
 }
 
-/* تصميم الأزرار */
 button {
   margin: 10px;
   padding: 15px 20px;
   font-size: 18px;
   border: none;
-  border-radius: 5px; /* تقويس الزوايا */
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease; /* تأثير الانتقال */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* تأثير عند التمرير على الأزرار */
 button:hover {
-  background-color: #ddd; /* تغيير لون الخلفية عند التمرير */
-  color: black; /* تغيير لون النص عند التمرير */
+  background-color: #ddd;
+  color: black;
 }
 
-/* تصميم الإشعارات */
 .notification {
   position: fixed;
   bottom: 20px;
-  left: 20px;
-  background-color: #007bff; /* لون الخلفية */
-  color: white; /* لون النص */
-  padding: 10px 20px;
-  border-radius: 5px; /* تقويس الزوايا */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* تأثير الظل */
-  animation: fadeIn 0.5s ease; /* إضافة حركة للإشعار عند ظهوره */
-}
-
-/* حركة ظهور الإشعارات */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* تحسين إضافي للرؤوس */
-h1, h2, h3 {
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
   text-align: center;
-  color: #333; /* لون نص الرؤوس */
-  margin-bottom: 20px;
+  z-index: 1000;
 }
 
-/* تحسين الحاويات العامة */
-.container {
-  padding: 20px;
-  margin: 0 auto;
-  max-width: 600px;
-  background-color: #fff; /* لون خلفية الحاوية */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* تأثير الظل */
-  border-radius: 10px; /* تقويس الزوايا */
+#callLog {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
