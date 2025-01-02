@@ -16,11 +16,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // اتصال MongoDB
-const mongoURI = 'mongodb+srv://yassinonur:zy7evVWg16Fiq7jY@chatdatabase.lwadf.mongodb.net/?retryWrites=true&w=majority&appName=chatdatabase';
+const mongoURI = 'mongodb+srv://yassinonur:Artega%402025@chatdatabase.lwadf.mongodb.net/?retryWrites=true&w=majority&appName=chatdatabase';
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch((err) => {
