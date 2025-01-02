@@ -1,6 +1,5 @@
 const notificationSound = new Audio('notification.mp3'); // صوت الإشعارات
 const callLog = []; // سجل المكالمات
-let callTimeout; // مؤقت المكالمة
 
 const socket = io('http://localhost:3000'); // الاتصال بالخادم
 
@@ -48,19 +47,12 @@ socket.on('incoming_call', ({ callerId, calleeId }) => {
     showNotification(`Incoming call from ${callerId}`);
     document.getElementById('callActions').style.display = 'block';
     document.getElementById('callActions').setAttribute('data-caller-id', callerId);
-
-    callTimeout = setTimeout(() => {
-      showNotification('Call timed out.');
-      socket.emit('timeout_call', { callerId });
-      document.getElementById('callActions').style.display = 'none';
-    }, 10000);
   }
 });
 
 // قبول المكالمة
 document.getElementById('acceptCallBtn').addEventListener('click', () => {
   const callerId = document.getElementById('callActions').getAttribute('data-caller-id');
-  clearTimeout(callTimeout);
   sessionStorage.setItem('otherUserId', callerId);
   socket.emit('accept_call', { callerId });
   window.location.href = 'call.html';
@@ -69,29 +61,18 @@ document.getElementById('acceptCallBtn').addEventListener('click', () => {
 // رفض المكالمة
 document.getElementById('rejectCallBtn').addEventListener('click', () => {
   const callerId = document.getElementById('callActions').getAttribute('data-caller-id');
-  clearTimeout(callTimeout);
   socket.emit('reject_call', { callerId });
   document.getElementById('callActions').style.display = 'none';
 });
 
 // إنهاء المكالمة
-document.getElementById('endCallBtn')?.addEventListener('click', () => {
-  const otherUserId = sessionStorage.getItem('otherUserId');
-  if (otherUserId) {
-    socket.emit('end_call', { otherUserId });
-    showNotification('You ended the call.');
-  }
-  window.location.href = 'index.html';
-});
-
-// استقبال حدث إنهاء المكالمة
 socket.on('call_ended', () => {
   showNotification('The call has been ended by the other party.');
   window.location.href = 'index.html';
 });
 
 // عرض سجل المكالمات
-document.getElementById('showLogBtn')?.addEventListener('click', () => {
+document.getElementById('showLogBtn').addEventListener('click', () => {
   const logContainer = document.getElementById('callLog');
   logContainer.innerHTML = '';
 
