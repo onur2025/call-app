@@ -40,21 +40,6 @@ io.on('connection', (socket) => {
     if (calleeSocket) {
       console.log(`Call initiated by ${callerId} to ${calleeId}`);
       io.to(calleeSocket).emit('incoming_call', { callerId, calleeId });
-
-      // إضافة مهلة زمنية
-      const timeout = setTimeout(() => {
-        console.log(`Call timeout: ${calleeId} did not respond.`);
-        io.to(users[callerId]).emit('call_timeout', { calleeId });
-      }, 30000); // 30 ثانية
-
-      // إلغاء المهلة إذا تم قبول المكالمة أو رفضها
-      socket.on('accept_call', ({ callerId: acceptCallerId }) => {
-        if (acceptCallerId === callerId) clearTimeout(timeout);
-      });
-
-      socket.on('reject_call', ({ callerId: rejectCallerId }) => {
-        if (rejectCallerId === callerId) clearTimeout(timeout);
-      });
     } else {
       console.log(`Callee ${calleeId} is not available.`);
       socket.emit('user_unavailable');
@@ -67,9 +52,6 @@ io.on('connection', (socket) => {
     if (callerSocket) {
       console.log(`Call accepted by ${socket.id} for caller ${callerId}`);
       io.to(callerSocket).emit('redirect_to_call');
-    } else {
-      console.log(`Caller ${callerId} is not available.`);
-      socket.emit('error', { message: 'Caller not available.' });
     }
   });
 
@@ -79,9 +61,6 @@ io.on('connection', (socket) => {
     if (callerSocket) {
       console.log(`Call rejected by ${socket.id} for caller ${callerId}`);
       io.to(callerSocket).emit('call_rejected');
-    } else {
-      console.log(`Caller ${callerId} is not available.`);
-      socket.emit('error', { message: 'Caller not available.' });
     }
   });
 
@@ -92,9 +71,6 @@ io.on('connection', (socket) => {
       console.log(`Call ended by ${socket.id} for user ${otherUserId}`);
       io.to(otherUserSocket).emit('call_ended');
       io.to(socket.id).emit('call_ended'); // إشعار المستخدم الذي أنهى المكالمة
-    } else {
-      console.log(`User ${otherUserId} is not available to end the call.`);
-      socket.emit('error', { message: 'The other user is not available to end the call.' });
     }
   });
 
