@@ -7,25 +7,25 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Call App</h1>
+  <div class="container">
+    <h1>Welcome to Call App</h1>
 
-  <div class="input-group">
-    <label for="userId">Your ID:</label>
-    <input type="text" id="userId" placeholder="Enter your ID">
-    <button id="registerBtn">Register</button>
-  </div>
-  <br>
+    <div class="input-group">
+      <label for="userId">Your ID:</label>
+      <input type="text" id="userId" placeholder="Enter your ID">
+      <button id="registerBtn" class="btn-primary">Register</button>
+    </div>
 
-  <div class="input-group">
-    <label for="callId">Call ID:</label>
-    <input type="text" id="callId" placeholder="Enter call ID">
-    <button id="callBtn">Call</button>
-  </div>
-  <br>
+    <div class="input-group">
+      <label for="callId">Call ID:</label>
+      <input type="text" id="callId" placeholder="Enter call ID">
+      <button id="callBtn" class="btn-primary">Call</button>
+    </div>
 
-  <div id="callActions" style="display: none;">
-    <button id="acceptCallBtn" class="btn-accept">Accept</button>
-    <button id="rejectCallBtn" class="btn-reject">Reject</button>
+    <div id="callActions" class="call-actions" style="display: none;">
+      <button id="acceptCallBtn" class="btn-success">Accept</button>
+      <button id="rejectCallBtn" class="btn-danger">Reject</button>
+    </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
