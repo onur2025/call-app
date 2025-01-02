@@ -10,7 +10,7 @@ const io = new Server(server);
 const users = {}; // تخزين المستخدمين المتصلين
 
 io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
+  console.log(`User connected: ${socket.id}`);
 
   // تسجيل المستخدم
   socket.on('register', (userData) => {
@@ -24,14 +24,9 @@ io.on('connection', (socket) => {
 
   // بدء المكالمة
   socket.on('call', ({ callerId, calleeId }) => {
-    if (!users[callerId]) {
-      socket.emit('error', { message: 'Caller not registered.' });
-      return;
-    }
-
+    console.log(`Call initiated by ${callerId} to ${calleeId}`);
     const calleeSocket = users[calleeId];
     if (calleeSocket) {
-      console.log(`Call initiated from ${callerId} to ${calleeId}`);
       io.to(calleeSocket).emit('incoming_call', { callerId });
       io.to(users[callerId]).emit('call_initiated', { calleeId });
     } else {
@@ -46,6 +41,7 @@ io.on('connection', (socket) => {
     if (callerSocket) {
       io.to(callerSocket).emit('redirect_to_call');
       io.to(socket.id).emit('redirect_to_call');
+      console.log(`Call accepted by ${socket.id}`);
     }
   });
 
@@ -54,6 +50,17 @@ io.on('connection', (socket) => {
     const callerSocket = users[callerId];
     if (callerSocket) {
       io.to(callerSocket).emit('call_rejected');
+      console.log(`Call rejected by ${socket.id}`);
+    }
+  });
+
+  // إنهاء المكالمة
+  socket.on('end_call', ({ otherUserId }) => {
+    const otherUserSocket = users[otherUserId];
+    if (otherUserSocket) {
+      io.to(otherUserSocket).emit('call_ended');
+      io.to(socket.id).emit('call_ended');
+      console.log(`Call ended between ${socket.id} and ${otherUserId}`);
     }
   });
 
@@ -61,8 +68,8 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     for (const [userId, socketId] of Object.entries(users)) {
       if (socketId === socket.id) {
-        delete users[userId];
         console.log(`User disconnected: ${userId}`);
+        delete users[userId];
         break;
       }
     }
