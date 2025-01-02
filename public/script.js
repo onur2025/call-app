@@ -1,40 +1,37 @@
-const socket = io('http://localhost:3000');
+const chatList = document.getElementById('chatList');
+const messages = document.getElementById('messages');
+const messageInput = document.getElementById('messageInput');
+const sendMessageBtn = document.getElementById('sendMessageBtn');
 
-document.getElementById('registerBtn').addEventListener('click', () => {
-  const userId = document.getElementById('userId').value;
-  if (userId) {
-    socket.emit('register', { userId });
-    alert('Registered successfully!');
+// بيانات افتراضية للمحادثات
+const chats = [
+  { id: 1, name: 'John Doe' },
+  { id: 2, name: 'Jane Smith' }
+];
+
+// تحميل المحادثات في الشريط الجانبي
+chats.forEach(chat => {
+  const li = document.createElement('li');
+  li.textContent = chat.name;
+  li.dataset.id = chat.id;
+  li.addEventListener('click', () => selectChat(chat));
+  chatList.appendChild(li);
+});
+
+// عرض الرسائل
+const selectChat = (chat) => {
+  document.getElementById('chatHeader').textContent = chat.name;
+  messages.innerHTML = ''; // إعادة تعيين الرسائل
+};
+
+// إرسال الرسائل
+sendMessageBtn.addEventListener('click', () => {
+  const message = messageInput.value.trim();
+  if (message) {
+    const div = document.createElement('div');
+    div.textContent = message;
+    div.style.marginBottom = '10px';
+    messages.appendChild(div);
+    messageInput.value = '';
   }
-});
-
-document.getElementById('callBtn').addEventListener('click', () => {
-  const userId = document.getElementById('userId').value;
-  const callId = document.getElementById('callId').value;
-  if (userId && callId) {
-    socket.emit('call', { callerId: userId, calleeId: callId });
-  }
-});
-
-socket.on('incoming_call', ({ callerId }) => {
-  document.getElementById('callActions').style.display = 'block';
-  document.getElementById('callActions').setAttribute('data-caller-id', callerId);
-});
-
-document.getElementById('acceptCallBtn').addEventListener('click', () => {
-  const callerId = document.getElementById('callActions').getAttribute('data-caller-id');
-  socket.emit('accept_call', { callerId });
-  sessionStorage.setItem('otherUserId', callerId);
-  window.location.href = 'call.html';
-});
-
-document.getElementById('rejectCallBtn').addEventListener('click', () => {
-  const callerId = document.getElementById('callActions').getAttribute('data-caller-id');
-  socket.emit('reject_call', { callerId });
-  document.getElementById('callActions').style.display = 'none';
-});
-
-socket.on('call_ended', () => {
-  alert('The call has been ended.');
-  window.location.href = 'index.html';
 });
