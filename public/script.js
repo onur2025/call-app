@@ -1,5 +1,5 @@
-const notificationSound = new Audio('notification.mp3'); // صوت الإشعارات
-const socket = io('http://localhost:3000'); // الاتصال بالخادم
+const notificationSound = new Audio('notification.mp3');
+const socket = io('http://localhost:3000');
 
 // دالة لإظهار الإشعارات
 const showNotification = (message) => {
@@ -45,12 +45,6 @@ socket.on('incoming_call', ({ callerId }) => {
   showNotification(`Incoming call from ${callerId}`);
   document.getElementById('callActions').style.display = 'block';
   document.getElementById('callActions').setAttribute('data-caller-id', callerId);
-});
-
-// إشعار عند بدء الاتصال من المتصل
-socket.on('call_initiated', ({ calleeId }) => {
-  console.log(`Calling ${calleeId}`);
-  showNotification(`Calling ${calleeId}...`);
 });
 
 // قبول المكالمة
