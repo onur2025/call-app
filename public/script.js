@@ -69,6 +69,7 @@ document.getElementById('acceptCallBtn').addEventListener('click', () => {
   const callerId = callActions.getAttribute('data-caller-id');
 
   clearTimeout(callTimeout); // إلغاء المؤقت
+  sessionStorage.setItem('otherUserId', callerId); // تخزين معرف الطرف الآخر
   socket.emit('accept_call', { callerId });
   showNotification(`You accepted the call from ${callerId}.`);
 
@@ -92,6 +93,20 @@ document.getElementById('rejectCallBtn').addEventListener('click', () => {
 // استقبال حدث إعادة التوجيه إلى صفحة الاتصال
 socket.on('redirect_to_call', () => {
   window.location.href = 'call.html';
+});
+
+// إنهاء المكالمة عند الضغط على الزر الأحمر
+document.getElementById('endCallBtn')?.addEventListener('click', () => {
+  const otherUserId = sessionStorage.getItem('otherUserId'); // الحصول على معرف الطرف الآخر
+  socket.emit('end_call', { otherUserId }); // إرسال الحدث إلى الخادم
+  showNotification('You ended the call.');
+  window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية
+});
+
+// استقبال حدث إنهاء المكالمة من الطرف الآخر
+socket.on('call_ended', () => {
+  alert('The call has been ended by the other party.');
+  window.location.href = 'index.html'; // العودة إلى الصفحة الرئيسية
 });
 
 // استقبال رفض المكالمة
