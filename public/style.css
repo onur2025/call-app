@@ -1,120 +1,66 @@
-/* تنسيق عام للصفحة */
+/* تصميم الصفحة العامة */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
+  background-color: #f4f4f4; /* لون خلفية عام */
 }
 
-/* تنسيق العنوان الرئيسي */
-h1 {
-  color: #007bff;
-  margin-bottom: 20px;
-}
-
-/* تنسيق العناصر الداخلية */
-div {
-  margin: 10px 0;
-}
-
-/* تنسيق حقول الإدخال */
-input {
-  padding: 10px;
-  margin-right: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-/* تنسيق الأزرار */
+/* تصميم الأزرار */
 button {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: #fff;
+  margin: 10px;
+  padding: 15px 20px;
+  font-size: 18px;
   border: none;
-  border-radius: 5px;
+  border-radius: 5px; /* تقويس الزوايا */
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease; /* تأثير الانتقال */
 }
 
+/* تأثير عند التمرير على الأزرار */
 button:hover {
-  background-color: #0056b3;
+  background-color: #ddd; /* تغيير لون الخلفية عند التمرير */
+  color: black; /* تغيير لون النص عند التمرير */
 }
 
-/* تنسيق قائمة سجل المكالمات */
-#callLog {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-  width: 300px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-#callLog li {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-#callLog li:last-child {
-  border-bottom: none;
-}
-
-/* تنسيق أزرار القبول والرفض */
-#callActions button {
-  padding: 10px 15px;
-  margin: 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-#acceptCallBtn {
-  background-color: green;
-  color: white;
-}
-
-#rejectCallBtn {
-  background-color: red;
-  color: white;
-}
-
-#acceptCallBtn:hover {
-  background-color: darkgreen;
-}
-
-#rejectCallBtn:hover {
-  background-color: darkred;
-}
-
-/* تنسيق الإشعارات */
+/* تصميم الإشعارات */
 .notification {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #007bff;
-  color: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  font-size: 16px;
-  animation: slide-in 0.5s ease;
+  bottom: 20px;
+  left: 20px;
+  background-color: #007bff; /* لون الخلفية */
+  color: white; /* لون النص */
+  padding: 10px 20px;
+  border-radius: 5px; /* تقويس الزوايا */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* تأثير الظل */
+  animation: fadeIn 0.5s ease; /* إضافة حركة للإشعار عند ظهوره */
 }
 
-/* تأثير انزلاق الإشعارات */
-@keyframes slide-in {
+/* حركة ظهور الإشعارات */
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
+}
+
+/* تحسين إضافي للرؤوس */
+h1, h2, h3 {
+  text-align: center;
+  color: #333; /* لون نص الرؤوس */
+  margin-bottom: 20px;
+}
+
+/* تحسين الحاويات العامة */
+.container {
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 600px;
+  background-color: #fff; /* لون خلفية الحاوية */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* تأثير الظل */
+  border-radius: 10px; /* تقويس الزوايا */
 }
