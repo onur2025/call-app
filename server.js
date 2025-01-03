@@ -1,111 +1,69 @@
 const express = require('express');
-const http = require('http');
 const mongoose = require('mongoose');
-const { Server } = require('socket.io');
+const bodyParser = require('body-parser');
 const path = require('path');
 
-const User = require('./models/User');
-const Message = require('./models/Message');
-
+// إنشاء التطبيق
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const PORT = process.env.PORT || 10000;
 
-// Middleware
-app.use(express.json());
+// إعداد قاعدة البيانات
+const mongoURI = 'mongodb+srv://yassinonur:fTWv5P.JaYLhfiF@chatdatabase.lwadf.mongodb.net/?retryWrites=true&w=majority';
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
+
+// تعريف نموذج المستخدم
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  phone: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const User = mongoose.model('User', userSchema);
+
+// إعداد middlewares
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MongoDB Connection
-const mongoURI = 'mongodb+srv://yassinonur:fTWv5P.JaYLhfiF@chatdatabase.lwadf.mongodb.net/?retryWrites=true&w=majority&appName=chatdatabase';
-
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch((err) => {
-  console.error('Error connecting to MongoDB:', err);
-});
-
-// User registration endpoint
+// نقطة تسجيل المستخدم الجديد
 app.post('/register', async (req, res) => {
-  const { username, email, phone, password } = req.body;
+  const { username, phone, password } = req.body;
 
   try {
-    const user = new User({ username, email, phone, password });
+    const existingUser = await User.findOne({ phone });
+    if (existingUser) {
+      return res.status(400).send('Phone number already registered.');
+    }
+
+    const user = new User({ username, phone, password });
     await user.save();
-    res.status(201).send('User registered successfully');
+    res.status(201).send('User registered successfully.');
   } catch (err) {
-    res.status(500).send('Error registering user: ' + err.message);
+    console.error('Error registering user:', err);
+    res.status(500).send('Error registering user.');
   }
 });
 
-// Send message endpoint
-app.post('/send-message', async (req, res) => {
-  const { sender, recipient, content } = req.body;
+// نقطة تسجيل الدخول
+app.post('/login', async (req, res) => {
+  const { phone, password } = req.body;
 
   try {
-    const message = new Message({ sender, recipient, content });
-    await message.save();
-    res.status(201).send('Message sent successfully');
+    const user = await User.findOne({ phone, password });
+    if (user) {
+      res.status(200).send('Login successful.');
+    } else {
+      res.status(401).send('Invalid phone number or password.');
+    }
   } catch (err) {
-    res.status(500).send('Error sending message');
+    console.error('Error during login:', err);
+    res.status(500).send('Error during login.');
   }
 });
 
-// Retrieve messages endpoint
-app.get('/messages/:username', async (req, res) => {
-  const { username } = req.params;
-
-  try {
-    const messages = await Message.find({
-      $or: [{ sender: username }, { recipient: username }]
-    }).sort({ timestamp: -1 });
-    res.status(200).json(messages);
-  } catch (err) {
-    res.status(500).send('Error fetching messages: ' + err.message);
-  }
-});
-
-// Search for users endpoint
-app.get('/users', async (req, res) => {
-  const { search } = req.query;
-
-  try {
-    const users = await User.find({
-      $or: [
-        { email: new RegExp(search, 'i') },
-        { phone: new RegExp(search, 'i') },
-        { username: new RegExp(search, 'i') }
-      ]
-    });
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).send('Error searching for users: ' + err.message);
-  }
-});
-
-// Socket.IO for real-time messaging
-io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
-
-  socket.on('join_room', (room) => {
-    socket.join(room);
-    console.log(`User ${socket.id} joined room: ${room}`);
-  });
-
-  socket.on('send_message', (data) => {
-    const { room, message } = data;
-    io.to(room).emit('receive_message', message);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('A user disconnected:', socket.id);
-  });
-});
-
-// Start the server
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+// بدء الخادم
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
