@@ -1,11 +1,96 @@
-/* تنسيق صفحة المراسلة */
+/* عام */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* الصفحة الرئيسية */
+.app-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form {
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+input {
+  display: block;
+  width: 90%;
+  margin: 10px auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+/* إشعار النجاح أو الخطأ */
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #28a745; /* اللون الأخضر للإشعار */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  z-index: 1000;
+  display: none;
+}
+
+.notification.error {
+  background-color: #dc3545; /* اللون الأحمر للأخطاء */
+}
+
+/* صفحة المراسلة */
 .chat-container {
   display: flex;
   width: 100%;
   height: 100vh;
 }
 
-/* الشريط الجانبي */
 .sidebar {
   width: 25%;
   background-color: #f1f1f1;
@@ -43,7 +128,6 @@
   background-color: #e7e7e7;
 }
 
-/* منطقة الرسائل */
 .chat-area {
   width: 75%;
   display: flex;
@@ -56,7 +140,6 @@
   padding: 20px;
   overflow-y: auto;
   box-sizing: border-box;
-  background-color: #fff;
   border-bottom: 1px solid #ddd;
 }
 
