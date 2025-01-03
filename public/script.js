@@ -1,69 +1,50 @@
-// دالة لإظهار الإشعارات داخل التطبيق
-const showNotification = (message, isError = false) => {
-  const notification = document.getElementById('notification');
-  notification.textContent = message;
-  notification.className = 'notification';
-  if (isError) {
-    notification.classList.add('error');
-  }
-  notification.style.display = 'block';
+// البحث عن المستخدمين
+document.getElementById('searchUser').addEventListener('input', (event) => {
+  const query = event.target.value.toLowerCase();
+  const users = document.querySelectorAll('.user-item');
+  users.forEach((user) => {
+    if (user.textContent.toLowerCase().includes(query)) {
+      user.style.display = '';
+    } else {
+      user.style.display = 'none';
+    }
+  });
+});
 
-  // إخفاء الإشعار بعد 5 ثوانٍ
-  setTimeout(() => {
-    notification.style.display = 'none';
-  }, 5000);
-};
-
-// تسجيل مستخدم جديد
-document.getElementById('registerBtn').addEventListener('click', () => {
-  const username = document.getElementById('username').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const password = document.getElementById('password').value.trim();
-
-  if (username && phone && password) {
-    fetch('/register', {
+// إرسال رسالة
+document.getElementById('sendMessageBtn').addEventListener('click', () => {
+  const messageInput = document.getElementById('messageInput');
+  const message = messageInput.value.trim();
+  if (message) {
+    // إرسال الرسالة إلى الخادم
+    fetch('/send-message', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, phone, password })
+      body: JSON.stringify({ content: message })
     })
       .then(response => response.text())
       .then(data => {
-        showNotification(data); // إظهار إشعار النجاح
-        window.location.href = 'chat.html';
+        const messagesDiv = document.getElementById('messages');
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.textContent = message;
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // تمرير لآخر الرسائل
+        messageInput.value = '';
       })
-      .catch(err => {
-        console.error('Error:', err);
-        showNotification('An error occurred during registration.', true); // إظهار إشعار الخطأ
-      });
+      .catch(err => console.error('Error sending message:', err));
   } else {
-    showNotification('Please fill all fields.', true); // إشعار الحقول الفارغة
+    alert('Message cannot be empty.');
   }
 });
 
-// تسجيل الدخول
-document.getElementById('loginBtn').addEventListener('click', () => {
-  const phone = document.getElementById('loginPhone').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
-
-  if (phone && password) {
-    fetch('/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, password })
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Invalid login credentials');
-        return response.text();
-      })
-      .then(data => {
-        showNotification(data); // إظهار إشعار النجاح
-        window.location.href = 'chat.html';
-      })
-      .catch(err => {
-        console.error('Error:', err);
-        showNotification('Invalid phone number or password.', true); // إشعار الخطأ
-      });
-  } else {
-    showNotification('Please fill all fields.', true); // إشعار الحقول الفارغة
-  }
+// استقبال الرسائل من Socket.IO
+const socket = io();
+socket.on('receive_message', (message) => {
+  const messagesDiv = document.getElementById('messages');
+  const messageElement = document.createElement('div');
+  messageElement.className = 'message';
+  messageElement.textContent = message;
+  messagesDiv.appendChild(messageElement);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
