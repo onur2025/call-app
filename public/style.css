@@ -9,76 +9,93 @@ body {
   height: 100vh;
 }
 
-.app-container {
+/* حاوية التطبيق */
+.chat-container {
+  display: flex;
   width: 100%;
-  max-width: 500px;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
 
-.form-container {
+/* الشريط الجانبي */
+.sidebar {
+  width: 25%;
+  background-color: #f1f1f1;
+  border-right: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.form {
-  text-align: center;
-}
-
-h2 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-input {
-  display: block;
-  width: 90%;
-  margin: 10px auto;
   padding: 10px;
+  box-sizing: border-box;
+}
+
+.search-bar {
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 16px;
+  width: 100%;
 }
 
-button {
+.user-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.user-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.user-item:hover {
+  background-color: #e7e7e7;
+}
+
+/* منطقة الرسائل */
+.chat-area {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.messages {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.message-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.message-input input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.message-input button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
+  margin-left: 10px;
   cursor: pointer;
-  font-size: 16px;
 }
 
-button:hover {
+.message-input button:hover {
   background-color: #0056b3;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid #ddd;
-  margin: 20px 0;
-}
-
-/* إشعار النجاح أو الخطأ */
-.notification {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #28a745; /* اللون الأخضر للإشعار */
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  font-size: 14px;
-  z-index: 1000;
-  display: none;
-}
-
-.notification.error {
-  background-color: #dc3545; /* اللون الأحمر للأخطاء */
 }
