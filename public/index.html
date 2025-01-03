@@ -8,13 +8,28 @@
 </head>
 <body>
   <div class="app-container">
-    <div class="register-form">
-      <h2>Register</h2>
-      <input type="text" id="username" placeholder="Username">
-      <input type="email" id="email" placeholder="Email">
-      <input type="text" id="phone" placeholder="Phone (Optional)">
-      <input type="password" id="password" placeholder="Password">
-      <button id="registerBtn">Register</button>
+    <!-- إشعار الرسائل -->
+    <div id="notification" class="notification" style="display: none;"></div>
+
+    <div class="form-container">
+      <!-- قسم تسجيل الدخول -->
+      <div class="form login-form">
+        <h2>Login</h2>
+        <input type="text" id="loginPhone" placeholder="Phone Number" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button id="loginBtn">Login</button>
+      </div>
+
+      <hr class="divider">
+
+      <!-- قسم التسجيل الجديد -->
+      <div class="form register-form">
+        <h2>Register</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="text" id="phone" placeholder="Phone Number" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="registerBtn">Register</button>
+      </div>
     </div>
   </div>
 
