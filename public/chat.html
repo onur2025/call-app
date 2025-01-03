@@ -7,65 +7,28 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="chat-app">
+  <div class="chat-container">
     <!-- قائمة الأصدقاء -->
     <div class="sidebar">
-      <div class="search-bar">
-        <input type="text" id="searchUser" placeholder="Search by username or phone">
-      </div>
-      <ul class="user-list" id="userList">
-        <!-- سيتم ملء القائمة ديناميكيًا -->
+      <input type="text" id="searchUser" placeholder="Search users..." class="search-bar">
+      <ul id="userList" class="user-list">
+        <li class="user-item">User 1</li>
+        <li class="user-item">User 2</li>
+        <li class="user-item">User 3</li>
       </ul>
     </div>
 
-    <!-- نافذة المحادثة -->
-    <div class="chat-window">
-      <div class="messages" id="messages">
-        <!-- الرسائل ستظهر هنا -->
-      </div>
+    <!-- منطقة الرسائل -->
+    <div class="chat-area">
+      <div id="messages" class="messages"></div>
       <div class="message-input">
-        <input type="text" id="messageInput" placeholder="Type a message">
+        <input type="text" id="messageInput" placeholder="Type your message...">
         <button id="sendMessageBtn">Send</button>
       </div>
     </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-
-    // إرسال رسالة
-    document.getElementById('sendMessageBtn').addEventListener('click', () => {
-      const message = document.getElementById('messageInput').value;
-      if (message) {
-        socket.emit('send_message', { message });
-        document.getElementById('messageInput').value = '';
-      }
-    });
-
-    // استقبال رسالة
-    socket.on('receive_message', (message) => {
-      const messagesDiv = document.getElementById('messages');
-      const messageItem = document.createElement('div');
-      messageItem.className = 'message';
-      messageItem.textContent = message;
-      messagesDiv.appendChild(messageItem);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight; // التمرير إلى آخر رسالة
-    });
-
-    // البحث عن مستخدمين
-    document.getElementById('searchUser').addEventListener('input', (event) => {
-      const query = event.target.value.toLowerCase();
-      const users = document.querySelectorAll('.user-item');
-      users.forEach((user) => {
-        if (user.textContent.toLowerCase().includes(query)) {
-          user.style.display = '';
-        } else {
-          user.style.display = 'none';
-        }
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
-
